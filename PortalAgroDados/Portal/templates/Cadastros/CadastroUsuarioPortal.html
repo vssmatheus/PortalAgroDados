@@ -1,0 +1,151 @@
+{% extends 'BaseLayout.html' %}{% block content %}{% load wtforms %}{% csrf_token %}
+     <div class="card" style="border-style: ridge; background: white;">
+         <div class="card-header" style="border-bottom:3px solid #75c46a; background: #3f4444; color: #FFF">
+            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                <h4 class="card-title">Cadastro Usuário Portal </h4>
+            {% else %}
+                <h4 class="card-title">Alterar Cadastro Usuário Portal </h4>
+            {% endif %}
+            <a class="heading-elements-toggle"><i class="fa fa-ellipsis font-medium-3"></i></a>
+        </div>
+        <div class="card-body">
+            <div class="card-block">
+                <form method="POST" action="/CadastroUsuarioPortal" class="form form-horizontal" autocomplete="off" id="formularioAcessoPortal" name="formularioAcessoPortal">
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ form.nome_completo.label }} <spam class="danger">*</spam>
+                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                                {% form_field form.nome_completo class="form-control" required="True" autocomplete="off" style="text-transform:uppercase" maxlength="40"%}
+                            {% else %}
+                                {% form_field form.nome_completo class="form-control" readonly="True" autocomplete="off" style="text-transform:uppercase" maxlength="40"%}
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.login.label }} <spam class="danger">*</spam>
+                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                                {% form_field form.login class="form-control" required="True" autocomplete="off" maxlength="30"%}
+                                <label class='hide' for="login" id="lb_login" ></label>
+                            {% else %}
+                                {% form_field form.login class="form-control" readonly="True" autocomplete="off" maxlength="30"%}
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4">
+                            {{ form.status.label }}
+                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                                {% form_field form.status class="form-control" autocomplete="off" disabled="disabled" maxlength="5"%}
+                            {% else %}
+                                {% form_field form.status class="form-control" autocomplete="off" maxlength="5"%}
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3">
+                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                                {{ form.senha.label }} <spam class="danger">*</spam>
+                            {% else %}
+                                <label style="font-size: 13px;">Nova Senha</label>
+                            {% endif %}
+                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                                {% form_field form.senha autocomplete="off" class="form-control"  type="password" required="True" maxlength="12"%}
+                            {% else %}
+                                <div class="input-group">
+                                    {% form_field form.senha autocomplete="off" class="form-control"  type="password" maxlength="12"%}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-3">
+                            {{ form.email.label }} <spam class="danger">*</spam>
+                            <div class="input-group">
+                                {% form_field form.email class="form-control" autocomplete="off" onblur="checarEmail();" required="True" maxlength="60"%}
+                                <br><br><label class='hide' for="email" id="email_msg" ></label>
+                            </div>
+                            <div id="msgemail"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-body">
+                        <h4 class="form-section"><i class="ft-unlock"></i> Liberar/Bloquear Permissões</h4>
+                        <br><br>
+
+                        <div class="col-md-2 col-sm-12">
+                            <div class="form-group pb-1">
+                                {% form_field form.direito_alterar class="switchery" data-size="sm" %}
+                                {{ form.direito_alterar.label }}
+                                <span data-toggle="tooltip" data-placement="top"
+                                    maxlength="4" class="primary">
+                                    <i class="fa fa-question-circle"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <div class="form-group pb-1">
+                                {% form_field form.direito_excluir class="switchery" data-size="sm" %}
+                                {{ form.direito_excluir.label }}
+                                <span data-toggle="tooltip" data-placement="top"
+                                    maxlength="4" class="primary">
+                                    <i class="fa fa-question-circle"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <div class="form-group pb-1">
+                            {% form_field form.direito_impressao class="switchery" data-size="sm" %}
+                            {{ form.direito_impressao.label }}
+                                <span data-toggle="tooltip" data-placement="top"
+                                    data-original-title="Direto Imprimir/Gerar Relátorio(s)"
+                                    maxlength="4" class="primary">
+                                    <i class="fa fa-question-circle"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <div class="form-group pb-1">
+                                {% form_field form.direito_incluir class="switchery" data-size="sm" %}
+                                {{ form.direito_incluir.label }}
+                                <span data-toggle="tooltip" data-placement="top"
+                                    maxlength="4" class="primary">
+                                    <i class="fa fa-question-circle"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-12">
+                            <div class="form-group pb-1">
+                                {% form_field form.direito_visu_login class="switchery" data-size="sm" %}
+                                {{ form.direito_visu_login.label }}
+                                <span data-toggle="tooltip" data-placement="top"
+                                    data-original-title="Direto Visualizar Lista de Logins Cadastrados"
+                                    maxlength="4" class="primary">
+                                    <i class="fa fa-question-circle"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8"></div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="white">.</label>
+                                {% if form.codigo_usuario.data == 0 %}
+                                    <button type="button" id="btncadastarGestor" style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%" onclick="cadastrarGestor();" class="btn btn-success">
+                                        <i class="fa fa-plus"></i> Cadastar
+                                    </button>
+                                {%  else %}
+                                    <button type="button" id="btnEditarGestor" style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%" onclick="alterarGestor()" class="btn btn-success"><i class="fa fa-plus"></i> Editar
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label class="white">.</label>
+                                <button type="button" onclick="window.open('/ConsultaListaUsuariosPortal', '_parent')"
+                                        id="btnbuscaGestor"
+                                        style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%;"
+                                        class="btn btn-danger"><i class="fa fa-plus"></i> Voltar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+     </div>
+{% endblock content %}

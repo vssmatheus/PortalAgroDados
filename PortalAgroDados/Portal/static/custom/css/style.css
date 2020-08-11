@@ -1,0 +1,196 @@
+/*================================================================================
+	Item Name: Stack - Responsive Admin Theme
+	Version: 1.0
+	Author: PIXINVENT
+	Author URL: http://www.themeforest.net/user/pixinvent
+================================================================================
+
+NOTE:
+------
+PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
+WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+.brand-logo {
+    margin-top: -15px;
+    z-index: 1;
+    left: 0;
+    right: 0;
+}
+
+.verde-bcard {
+	color: #015d37 !important; 
+}
+
+.table-width {
+    width: 100%; /* Optional */
+    border-collapse:collapse;
+    white-space: nowrap; 
+}
+
+body {
+    line-height: 1.0 !important;
+}
+
+.btn-flat{
+	border-radius: 0;
+}
+
+.btn-default-bc{
+	border-color: #015d37 !important;
+    background-color: #037144 !important;
+    color: #FFF !important;
+}
+.btn-default{
+	border:1px solid #ccc !important;
+}
+
+.btn-alert-bc{
+	border:1px solid #ccc !important;
+	background-color:#ffaeae
+}
+
+.btn-atention-bc {
+    border: 1px solid #ccc !important;
+    background-color: #ffff94;
+}
+
+.btn-default-bc:active {
+    border-color: #002415 !important;
+    background-color: #005B36 !important;
+    color: #FFF !important;
+}
+.card_index {
+	position: relative;
+	display: block;
+	margin-bottom: 1.5rem;
+	background-color: #f5f7fa;
+	border-radius: 0;
+	border: 1px solid rgba(0, 0, 0, 0.06); }
+
+.card_index:hover {
+	position: relative;
+	display: block;
+	margin-bottom: 1.5rem;
+	background-color: #fff;
+	border-radius: 0;
+	border: 1px solid rgba(0, 0, 0, 0.06); }
+
+.bg-gradient-convenio {
+	background-image: linear-gradient(to right, #085e3e 0%, #008f52 100%);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF085e3e', endColorstr='#FF008f52', GradientType=1); }
+
+.bg-gradient-frotas {
+	background-image: linear-gradient(to right, #137346 0%, #728a46 100%);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF137346', endColorstr='#FF728a46', GradientType=1); }
+
+.bg-gradient-alimentacao {
+	background-image: linear-gradient(to right, #953031 0%, #e73237 100%);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF953031', endColorstr='#FFe73237', GradientType=1); }	
+
+.bg-gradient-oficinas {
+	background-image: linear-gradient(to right, #215b81 0%, #2b9503 100%);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF215b81', endColorstr='#FF2b9503', GradientType=1); }	
+
+.bg-gradient-orcamento {
+	background-image: linear-gradient(to right, #3a4244 0%, #03626b 100%);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF3a4244', endColorstr='#FF03626b', GradientType=1); }	
+	
+.bg-gradient-brasilcard {
+	background-image: linear-gradient(to right, #015c36 0%, #015c36 100%);
+	background-repeat: repeat-x;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#015c36', endColorstr='#015c36', GradientType=1); }
+
+.tag-verde-volus {
+	background-color: #76c96e; }
+.tag-verde-volus[href]:focus {
+	background-color: #76c96e; }
+.tag-verde-volus[href]:hover {
+	background-color: #76c96e; }
+
+.tag-convenio {
+	background-color: #085e3e; }
+.tag-convenio[href]:focus {
+	background-color: #054E33; }
+.tag-convenio[href]:hover {
+	background-color: #054E33; }
+
+.tag-servidor {
+	background-color: #3d5b80; }
+.tag-servidor[href]:focus {
+	background-color: #223854; }
+.tag-servidor[href]:hover {
+	background-color: #223854; }
+
+.tag-refeicao {
+	background-color: #d1b63b; }
+.tag-refeicao[href]:focus {
+	background-color: #B49C2E; }
+.tag-refeicao[href]:hover {
+	background-color: #B49C2E; }
+
+.tag-alimentacao {
+	background-color: #a63133; 	
+}
+.tag-alimentacao[href]:focus {
+	background-color: #791F20; }
+.tag-alimentacao[href]:hover {
+	background-color: #791F20; }
+
+.tag-frotas {
+	background-color: #718741; }
+.tag-aliment[href]:focus {
+	background-color: #637736; }
+.tag-aliment[href]:hover {
+	background-color: #637736; }    
+
+
+.disabled{
+    text-decoration:none;
+    cursor: default;
+    color: #6f6f6f !important;
+}
+
+.input-erro{
+    border-color:red !important;
+}
+
+.center{
+    text-align: center;
+}
+.right{
+    text-align: right;
+}
+.left{
+    text-align: left;
+}
+
+.icone-edit{
+    font-size: 1.5em;
+    margin-left: 10px;
+    color: #0bb772;
+}
+
+.icone-excluir{
+    font-size: 1.5em;
+    margin-left: 13px;
+    color: #ef3838;
+}
+
+.btn-menor-table{
+	padding: 0.46rem 0.6rem;
+}
+
+@media only screen and (max-width: 1350px) {
+	.table-font-screen {
+		font-size:12px;
+	}
+}
+@media only screen and (max-width: 1200px) {
+	.table-font-screen {
+		font-size:11px;
+	}
+}

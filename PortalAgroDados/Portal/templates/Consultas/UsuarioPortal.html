@@ -1,0 +1,112 @@
+{% extends 'BaseLayout.html' %} {% block content %} {% csrf_token %} {% load wtforms %}
+    <div class="card" style="border-style: ridge; background: white;">
+        <div class="card-header" style="border-bottom:3px solid #EEEED1; background: #EEEED1; color: #000000">
+            <h5 class="card-title">CONSULTAR DE ACESSO AO PORTAL</h5>
+        </div>
+        <div class="card-body">
+            <div class="card-block" id="div-card-consulta-usuario">
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-group ">
+                            {{ form.login.label }}
+                            {% form_field form.login class="form-control "  style="text-transform:uppercase"%}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            {{ form.nome_usuario.label }}
+                            {% form_field form.nome_usuario class="form-control "  style="text-transform:uppercase"%}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            {{ form.status.label }}
+                            {% form_field form.status class="form-control" style="text-transform:uppercase"%}
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <label class="white">.</label>
+                            <button type="button" onclick="buscaUsuarioPortal();"
+                                    id="btnbuscaUsuarioPortal"
+                                    style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%;"
+                                    class="btn btn-primary"><i class="fa fa-search"></i> Consultar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="box-body">
+                        <table id="example2" class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                   <th>Login</th>
+                                   <th>Nome Usuário</th>
+                                   <th>E-mail</th>
+                                   <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                      <td>Trident</td>
+                                      <td>Internet
+                                        Explorer 4.0
+                                      </td>
+                                      <td>Win 95+</td>
+                                      <td> 4</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <br><br><br>
+                <div class="row" >
+                    <div class="col-md-8 "></div>
+                    <div class="col-md-4 " style="float: right">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <p class="lead primary">Total</p>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-bold-800"> Total Acessos</td>
+                                        <td class="text-bold-800 text-xs-right" id="qnt_total" style="color: #789cd6">0</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <br><br><br>
+                <div class="row">
+                    <div class="col-md-9"></div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <button type="button" onclick="window.open('/CadastroUsuarioPortal', '_parent')"
+{#                            <button type="button" onclick="window.open('/CadastroUsuarioPortal/0', '_parent')"#}
+                                    id="btnbuscaGestor"
+                                    style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%;"
+                                    class="btn btn-primary"><i class="fa fa-plus"></i> Cadastrar Usuário Portal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../static/Scripts/jquery.min.js"></script>
+    <script type="text/javascript" src="../static/js/UsuarioPortal/UsuarioPortal.js"></script>
+    <script>
+  $(function () {
+    $('#example1').DataTable()
+    $('#example2').DataTable({
+      'paging'      : true,
+      'lengthChange': false,
+      'searching'   : false,
+      'ordering'    : true,
+      'info'        : true,
+      'autoWidth'   : false
+    })
+  })
+</script>
+{% endblock content %}
