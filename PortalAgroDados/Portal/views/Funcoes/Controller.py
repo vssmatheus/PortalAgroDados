@@ -64,6 +64,15 @@ class Funcoes:
        else:
            return ''
 
+    def somente_numeros(self, text):
+        return int(''.join(filter(str.isdigit, text)))
+
+    def muda_permissao(self, p):
+        if p.upper() == 'Y':
+            return 'S'
+        return 'N'
+
+
     def gera_token(self, dados):
         redis = Conexao()
         chave = str(uuid.uuid4())

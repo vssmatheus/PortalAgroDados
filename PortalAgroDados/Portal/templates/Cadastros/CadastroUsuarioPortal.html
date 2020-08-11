@@ -1,49 +1,63 @@
 {% extends 'BaseLayout.html' %}{% block content %}{% load wtforms %}{% csrf_token %}
      <div class="card" style="border-style: ridge; background: white;">
-         <div class="card-header" style="border-bottom:3px solid #75c46a; background: #3f4444; color: #FFF">
-            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+         <div class="card-header" style="border-bottom:3px solid #3c8dbc; background: #3f4444; color: #FFF">
+            {% if form.codigo_usuario.data == 0 %}
                 <h4 class="card-title">Cadastro Usuário Portal </h4>
             {% else %}
                 <h4 class="card-title">Alterar Cadastro Usuário Portal </h4>
             {% endif %}
-            <a class="heading-elements-toggle"><i class="fa fa-ellipsis font-medium-3"></i></a>
         </div>
         <div class="card-body">
             <div class="card-block">
                 <form method="POST" action="/CadastroUsuarioPortal" class="form form-horizontal" autocomplete="off" id="formularioAcessoPortal" name="formularioAcessoPortal">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            {{ form.cpf.label }}<spam class="danger">*</spam>
+                            {% form_field form.cpf class="form-control validaCpf maskCpf" autocomplete="off" maxlength="14"%}
+                        </div>
+                        <div class="col-md-3">
                             {{ form.nome_completo.label }} <spam class="danger">*</spam>
-                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                            {% if form.codigo_usuario.data == 0 %}
                                 {% form_field form.nome_completo class="form-control" required="True" autocomplete="off" style="text-transform:uppercase" maxlength="40"%}
                             {% else %}
                                 {% form_field form.nome_completo class="form-control" readonly="True" autocomplete="off" style="text-transform:uppercase" maxlength="40"%}
                             {% endif %}
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             {{ form.login.label }} <spam class="danger">*</spam>
-                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                            {% if form.codigo_usuario.data == 0 %}
                                 {% form_field form.login class="form-control" required="True" autocomplete="off" maxlength="30"%}
                                 <label class='hide' for="login" id="lb_login" ></label>
                             {% else %}
                                 {% form_field form.login class="form-control" readonly="True" autocomplete="off" maxlength="30"%}
                             {% endif %}
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
+                            {{ form.matricula.label }} <spam class="danger">*</spam>
+                            {% if form.codigo_usuario.data == 0 %}
+                                {% form_field form.matricula class="form-control" required="True" autocomplete="off" maxlength="30"%}
+                                <label class='hide' for="login" id="lb_login" ></label>
+                            {% else %}
+                                {% form_field form.matricula class="form-control" readonly="True" autocomplete="off" maxlength="30"%}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
                             {{ form.status.label }}
-                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                            {% if form.codigo_usuario.data == 0 %}
                                 {% form_field form.status class="form-control" autocomplete="off" disabled="disabled" maxlength="5"%}
                             {% else %}
                                 {% form_field form.status class="form-control" autocomplete="off" maxlength="5"%}
                             {% endif %}
                         </div>
                         <div class="col-md-3">
-                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                            {% if form.codigo_usuario.data == 0 %}
                                 {{ form.senha.label }} <spam class="danger">*</spam>
                             {% else %}
                                 <label style="font-size: 13px;">Nova Senha</label>
                             {% endif %}
-                            {% if form.codigo_usuario.data == NaN or form.codigo_usuario.data == '' %}
+                            {% if form.codigo_usuario.data == 0 %}
                                 {% form_field form.senha autocomplete="off" class="form-control"  type="password" required="True" maxlength="12"%}
                             {% else %}
                                 <div class="input-group">
@@ -87,8 +101,8 @@
                         </div>
                         <div class="col-md-2 col-sm-12">
                             <div class="form-group pb-1">
-                            {% form_field form.direito_impressao class="switchery" data-size="sm" %}
-                            {{ form.direito_impressao.label }}
+                            {% form_field form.direito_grafico class="switchery" data-size="sm" %}
+                            {{ form.direito_grafico.label }}
                                 <span data-toggle="tooltip" data-placement="top"
                                     data-original-title="Direto Imprimir/Gerar Relátorio(s)"
                                     maxlength="4" class="primary">
@@ -124,11 +138,11 @@
                             <div class="form-group">
                                 <label class="white">.</label>
                                 {% if form.codigo_usuario.data == 0 %}
-                                    <button type="button" id="btncadastarGestor" style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%" onclick="cadastrarGestor();" class="btn btn-success">
+                                    <button type="button" id="btncadastarGestor" style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%" onclick="cadastrarUsuario();" class="btn btn-success">
                                         <i class="fa fa-plus"></i> Cadastar
                                     </button>
                                 {%  else %}
-                                    <button type="button" id="btnEditarGestor" style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%" onclick="alterarGestor()" class="btn btn-success"><i class="fa fa-plus"></i> Editar
+                                    <button type="button" id="btnEditarGestor" style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%" onclick="alterarUsuario()" class="btn btn-success"><i class="fa fa-plus"></i> Editar
                                     </button>
                                 {% endif %}
                             </div>
@@ -148,4 +162,27 @@
             </div>
         </div>
      </div>
+    <script type="text/javascript" src="../static/Scripts/jquery.min.js"></script>
+    <script src="../static/js/funcoes.js" type="text/javascript"></script>
+    <script src="../static/js/UsuarioPortal/UsuarioPortal.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function(){
+            CODIGO_USUARIO = {{ form.codigo_usuario.data }}
+{#            {% if Mensagem %}#}
+{#                if (CODIGO_USUARIO != 0){#}
+{#                    loadDiv("div-cadastra-usuario", "B");#}
+{#                    reloadAfterSwal("{{ Mensagem.Tipo }}",  "{{ Mensagem.Mensagem }}", "/CadastroUsuarioPortal/"+CODIGO_USUARIO)#}
+{#                }else{#}
+{#                    swal("","{{ Mensagem.Mensagem }}", "{{ Mensagem.Tipo }}" );#}
+{#                }#}
+{#            {% endif %}#}
+        });
+
+        {% if form.codigo_usuario.data > 0 %}
+            $("#login_usuario").attr("disabled","true");
+            $("#nome_usuario").attr("disabled","true");
+            $("#cpf").attr("disabled","true");
+        {% endif %}
+
+    </script>
 {% endblock content %}

@@ -5,8 +5,8 @@ var stepInicial = 0;   //index de inicialização var stepInicial
 
 /*Antigo load do migue*/
 function loadDiv(id,tipo){
-    // var block_ele = $("#"+id).closest('.card');
-    var block_ele = $.fn.blockUI("#"+id).closest('.card');
+    var block_ele = $("#"+id).closest('.card');
+
     if(tipo == "B"){
 
         block_ele.block({

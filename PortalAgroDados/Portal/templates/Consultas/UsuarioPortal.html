@@ -1,6 +1,6 @@
 {% extends 'BaseLayout.html' %} {% block content %} {% csrf_token %} {% load wtforms %}
     <div class="card" style="border-style: ridge; background: white;">
-        <div class="card-header" style="border-bottom:3px solid #EEEED1; background: #EEEED1; color: #000000">
+        <div class="card-header" style="border-bottom:3px solid #3c8dbc; background: #3f4444; color: #FFF">
             <h5 class="card-title">CONSULTAR DE ACESSO AO PORTAL</h5>
         </div>
         <div class="card-body">
@@ -35,54 +35,26 @@
                         </div>
                     </div>
                 </div>
+                <div class="row"></div>
                 <div class="card-body">
-                    <div class="box-body">
-                        <table id="example2" class="table table-bordered table-hover">
-                            <thead>
-                                <tr>
-                                   <th>Login</th>
-                                   <th>Nome Usuário</th>
-                                   <th>E-mail</th>
-                                   <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                      <td>Trident</td>
-                                      <td>Internet
-                                        Explorer 4.0
-                                      </td>
-                                      <td>Win 95+</td>
-                                      <td> 4</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-                <br><br><br>
-                <div class="row" >
-                    <div class="col-md-8 "></div>
-                    <div class="col-md-4 " style="float: right">
-                        <div class="table-responsive">
-                            <table class="table">
-                                <p class="lead primary">Total</p>
-                                <tbody>
-                                    <tr>
-                                        <td class="text-bold-800"> Total Acessos</td>
-                                        <td class="text-bold-800 text-xs-right" id="qnt_total" style="color: #789cd6">0</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div class="card-block">
+                        <div class="row">
+                            <div class="col-md">
+                                 <div class="table-responsive" style="max-height:600px">
+                                         <div id='div-consulta-usuarios'>
+                                     </div>
+                                 </div>
+                             </div>
                         </div>
                     </div>
                 </div>
-                <br><br><br>
+                <br><br>
                 <div class="row">
                     <div class="col-md-9"></div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <button type="button" onclick="window.open('/CadastroUsuarioPortal', '_parent')"
-{#                            <button type="button" onclick="window.open('/CadastroUsuarioPortal/0', '_parent')"#}
+{#                            <button type="button" onclick="window.open('/CadastroUsuarioPortal', '_parent')"#}
+                            <button type="button" onclick="window.open('/CadastroUsuarioPortal/0', '_parent')"
                                     id="btnbuscaGestor"
                                     style="padding: 0.55rem 0.85rem; border-radius: 0.25rem; width: 100%;"
                                     class="btn btn-primary"><i class="fa fa-plus"></i> Cadastrar Usuário Portal
@@ -97,16 +69,10 @@
     <script type="text/javascript" src="../static/Scripts/jquery.min.js"></script>
     <script type="text/javascript" src="../static/js/UsuarioPortal/UsuarioPortal.js"></script>
     <script>
-  $(function () {
-    $('#example1').DataTable()
-    $('#example2').DataTable({
-      'paging'      : true,
-      'lengthChange': false,
-      'searching'   : false,
-      'ordering'    : true,
-      'info'        : true,
-      'autoWidth'   : false
-    })
-  })
-</script>
+        $(document).ready(function(){
+            CABECALHO_TABELA = ['Login', 'Nome Usuário','Incluir', 'Alterar', 'Excluir', 'Gráfico',  'Status'];
+            CAMPOS_TABELA = ['LOGIN', 'NOME', 'INCLUIR', 'ALTERAR', 'EXCLUIR', 'GRAFICO', 'DESCRICAO_STATUS'];
+            montaTabUsuPortal(true);
+        });
+    </script>
 {% endblock content %}
