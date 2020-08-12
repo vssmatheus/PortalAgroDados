@@ -171,3 +171,26 @@ class Funcoes:
             nivel += 1
 
         return resul, total
+
+    def trata_retorno_oracle(self, value, msgSuccess, msgError):
+        saida = {'RowsEffected': False,
+                 'Mensagem': msgError,
+                 'TipoRetorno':  "error"
+         }
+
+        if 'RowsEffect' in value:
+            if int(value['RowsEffect']) > 0:
+                saida['RowsEffected'] = True
+                saida['TipoRetorno'] = "success"
+                saida['Mensagem'] = msgSuccess
+            else:
+                saida['Mensagem'] = msgError
+
+
+        elif 'Mensagem' in value:
+            if 'ORA-20002' in value['Mensagem']:
+                #MENSAGENS DE TRIGGER
+                saida['TipoRetorno'] = "info"
+                saida['Mensagem'] = (value['Mensagem'].split(':'))[1].split('\n')[0].strip()
+
+        return saida
