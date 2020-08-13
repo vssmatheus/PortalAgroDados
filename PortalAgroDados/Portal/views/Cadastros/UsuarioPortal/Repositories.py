@@ -16,8 +16,8 @@ class CadastrarUsuarioPortalDAO:
         param['NomeUsuario'] = f.retira_caracteres(param['NomeUsuario'])
         param['Cpf'] = param['Cpf'].replace('.', '').replace('-', '')
 
-        sql1 = """INSERT INTO AG_USUARIO_PORTAL (NOME, EMAIL, CPF, MATRICULA, SENHA, LOGIN )
-                  VALUES (%(NomeUsuario)s, %(EmailUsuario)s, %(Cpf)s, %(Matricula)s, %(SenhaUsuario)s, %(LoginUsuario)s );
+        sql1 = """INSERT INTO AG_USUARIO_PORTAL (NOME, EMAIL, CPF, MATRICULA, SENHA, LOGIN, DATA_CADASTRO, STATUS )
+                  VALUES (%(NomeUsuario)s, %(EmailUsuario)s, %(Cpf)s, %(Matricula)s, %(SenhaUsuario)s, %(LoginUsuario)s, CURRENT_TIMESTAMP, 'A' );
         """
 
         resul = cx.executa(sql1, param, True)
@@ -54,7 +54,7 @@ class CadastrarUsuarioPortalDAO:
 
                 cx.conectar()
 
-                resul = f.trata_retorno_oracle(cx.executa(sql2, param, True), 'Usuário Cadastrado com Sucesso!', 'Ocorreu um erro ao cadastar o usuário!')
+                resul = cx.executa(sql2, param, True)
         cx.desconectar()
         return resul
 
