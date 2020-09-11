@@ -71,18 +71,20 @@ function buscaUsuarioPortalSelecionado(codigo) {
     window.location = '/CadastroUsuarioPortal/' + codigo;
 }
 
-//**************Cadastrar Usuário portal
+
 // faz a validação se o valor digitr é um email(para que o  usuario nao digite qualquer coisa)
 function checarEmail() {
     if( document.forms[0].email.value=="" || document.forms[0].email.value.indexOf('@')==-1 || document.forms[0].email.value.indexOf('.')== -1 ){
         swal("Email Inválido", "", "info");
+        return false;
     }
+    return true;
 }
 
 function validacoesAcesso() {
 
     if ($("#cpf").val() == '' ||
-        $("#nome_usuario").val() == '' ||
+        $("#nome_completo").val() == '' ||
         $("#login").val() == '' ||
         $("#email").val() == '' ||
         $("#status").val() == '' ||
@@ -91,6 +93,8 @@ function validacoesAcesso() {
         $("#baseIcon-tab11").trigger('click');
         return false;
     }
+
+     return true;
 }
 
 function cadastrarUsuario() {
@@ -121,7 +125,6 @@ function cadastrarUsuario() {
             'Visualizar': $('#direito_visu_login').val(),
         },
         success: function(data){
-            console.log('kfdkgk')
 
             swal("", data.Mensagem, data.TipoRetorno)
             if (data.TipoRetorno == "success"){
@@ -129,6 +132,43 @@ function cadastrarUsuario() {
             }
         },error: function(data){
             console.log('Error')
+        }
+    });
+}
+
+function  alterarUsuario() {
+        $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie());
+            }
+        }
+    });
+    $.ajax({
+        dataType:"json",
+        type: "POST",
+        url: "/AlterarUsuario",
+        data: {
+            'CodigoUsuario': CODIGO_USUARIO,
+            'NomeUsuario': $('#nome_completo').val(),
+            'EmailUsuario': $('#email').val(),
+            'LoginUsuario': $('#login').val(),
+            'SenhaUsuario': $('#senha').val(),
+            'Cpf': $('#cpf').val(),
+            'Matricula': $('#matricula').val(),
+            'Alterar': $('#direito_alterar').val(),
+            'Excluir': $('#direito_excluir').val(),
+            'Grafico': $('#direito_grafico').val(),
+            'Incluir': $('#direito_incluir').val(),
+            'Visualizar': $('#direito_visu_login').val(),
+        },
+        success: function(data){
+            swal("", data.Mensagem, data.TipoRetorno)
+            if (data.Tipo == "success"){
+                window.location = '/ConsultaListaUsuariosPortal';
+            }
+        },error: function(data){
+
         }
     });
 }

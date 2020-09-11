@@ -94,7 +94,7 @@ class CadastrarUsuarioPortalDAO:
         cx.conectar()
         sql = """
             SELECT CPF
-            FROM OME_GESTORES
+            FROM AG_USUARIO_PORTAL
             WHERE  CPF = %(Cpf)s
         """
         usuario = cx.select(sql, param)
@@ -105,7 +105,7 @@ class CadastrarUsuarioPortalDAO:
         cx = Conexao()
         cx.conectar()
 
-        sql = """ SELECT * FROM OME_GESTORES  WHERE  SENHA = %(SenhaUsuario)s """
+        sql = """ SELECT * FROM AG_USUARIO_PORTAL  WHERE  SENHA = %(SenhaUsuario)s """
 
         usuario = cx.select(sql, param)
 

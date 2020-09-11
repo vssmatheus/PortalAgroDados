@@ -3,6 +3,8 @@ var habilitarAbas = 0; //habilitar todos os campos var habilitarAbas 0 = on | 1 
 var stepInicial = 0;   //index de inicialização var stepInicial
 
 
+
+
 /*Antigo load do migue*/
 function loadDiv(id,tipo){
     var block_ele = $("#"+id).closest('.card');
@@ -48,12 +50,6 @@ $(window).scroll(function(){
     }
 });
 
-/* Calendario antigo - substituiu pela mascara
-$( function() {
-    $( ".date" ).datepicker({language: "pt-BR"});
-});
-*/
-
 /* Formata campo para float */
 function formatReal( int ) {
     var tmp = int+'';
@@ -67,7 +63,7 @@ function formatReal( int ) {
 /*Formata campo para float também, o proximo que for utilizar ver qual função é melhor e apagar a outra sem medo*/
 $(".number_to_real").on("keyup", function(){
     var vlr = $("#"+this.id).val();
-    var rs = vlr.replace(",","").replace(".","");
+    var rs = vlr.replace(/\D/g, "")//replace(",","").replace(".","");
     $("#"+this.id).val(formatReal(rs));
 
 });
@@ -98,6 +94,41 @@ String.prototype.lpad = String.prototype.lpad || function(padString, length) {
     while (str.length < length)
         str = padString + str;
     return str;
+}
+
+/* Controle de Dicas do sistema*/
+function ControleDicas(tipo, btn){
+
+    $.ajax({
+        dataType:"json",
+        type: "POST",
+        url: "/ControleDicas",
+        data: {"TipoDica": tipo},
+        success: function(data){
+            $("#dicas_sessao").val(tipo);
+
+            if(tipo == 'N'){
+                swal({
+                    title: '',
+                    text: 'Dicas desativadas com sucesso! Você pode ativar elas a qualquer momento em <a href="/AlterarDadosUsu" class="primary">Alterar dados cadastrais</a>',
+                    html: true,
+                    type: "success"
+                });
+            }else{
+                swal({
+                    title: '',
+                    text: 'Dicas ativadas com sucesso! Você pode ativar elas a qualquer momento em <a href="/AlterarDadosUsu" class="primary">Alterar dados cadastrais</a>',
+                    html: true,
+                    type: "success"
+                });
+            }
+            if(btn == 'link'){
+                $("#alerta-tour").toggle("slide");
+            }
+        },error: function(data){
+             swal("Erro ao desativar dicas!","","error");
+        }
+    });
 }
 
 /*Formata valores*/
@@ -416,6 +447,7 @@ function retornaAccordion(param) {
         else {
             table = $('#dataTableRetornaAccordion'+ id_accordion_tem_cabecalho[i]['data']).DataTable({
                 paging: false,
+                scrollX: false,
                 searching: false,
                 language: {decimal: ","}
             });
@@ -502,23 +534,98 @@ $(document).ready(function(){
 } );
 });
 
-function validaDatasRelatorios(dt_inicial, dt_final, validaInicialFuturo = false){
+function extraiNumeros(valor=0) {
+    return valor.replace(/\D/g, "");
+}
+
+function altera_cidade_por_uf(id_uf, id_cidades, ibge=false){
+    let e = document.getElementById(id_uf);
+    let uf = e.options[e.selectedIndex].value;
+
+    let rota = ''
+    if (ibge){
+        rota = "/ConsultaCidadesIbge";
+    }else {
+        rota = "/ConsultaCidades";
+    }
+
+    $("#"+id_cidades).html("<option>Carregando...</option>");
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie());
+            }
+        }
+    });
+    $.ajax({
+        dataType:"json",
+        type: "POST",
+        url: rota,
+        data: {"Estado": uf },
+        success: function(data){
+
+            $("#"+id_cidades).empty();
+            if (ibge){
+               $("#"+id_cidades).html("<option value=''>SELECIONE UMA CIDADE</option>");
+            }else {
+                $("#"+id_cidades).html("<option value='TD'>TODOS</option>");
+            }
+
+            for(var i in data.Cidades){
+                $("#"+id_cidades).append(`<option value="`+data.Cidades[i].DESCRICAO+`">`+data.Cidades[i].DESCRICAO+`</option>`);
+            }
+        },error: function(data){
+             $("#"+id_cidades).html("<option value='TD'>TODOS</option>");
+        }
+    });
+}
+
+function alteraDepartamentoPorCentroCusto(id_centrocusto, id_departamento){
+    var e = document.getElementById(id_centrocusto);
+    var uf = e.options[e.selectedIndex].value;
+
+    $("#"+id_departamento).html("<option>Carregando...</option>");
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", getCookie());
+            }
+        }
+    });
+    $.ajax({
+        dataType:"json",
+        type: "POST",
+        url: "/ConsultarDepartamentoPorCentroCusto",
+        data: {"CentroCusto": uf },
+        success: function(data){
+            $("#"+id_departamento).empty();
+            $("#"+id_departamento).html("<option value='TD'>TODOS</option>");
+            for(var i in data.Relacao){
+                $("#"+id_departamento).append(`<option value="`+data.Relacao[i].CODIGO+`">`+data.Relacao[i].DEPARTAMENTO+`</option>`);
+            }
+        },error: function(data){
+            $("#"+id_departamento).html("<option value='TD'>TODOS</option>");
+        }
+    });
+}
+
+function validaDatasRelatorios(dt_inicial, dt_final, validaInicialFuturo = false, valiadDtInicial=true){
     var inicial = moment($("#"+dt_inicial).val(), "DD/MM/YYYY").toDate();
     var final = moment($("#"+dt_final).val(), "DD/MM/YYYY").toDate();
 
     var hoje = moment().format("DD/MM/YYYY").toString();
 
-      if (isNaN(inicial.getDate())) {
-        swal("", "Data Inicial não informada.", "warning");
-        return false;
-      }
+    if (valiadDtInicial) {
+        if (isNaN(inicial.getDate())) {
+            swal("", "Data Inicial não informada.", "warning");
+            return false;
+        }
 
-
-      if(validaInicialFuturo && (  inicial > moment( hoje, "DD/MM/YYYY").toDate()  ) ){
-          swal("", "Data Inicial não pode ser superior a Data de Hoje.", "warning");
-          return false;
-      }
-
+        if (validaInicialFuturo && (inicial > moment(hoje, "DD/MM/YYYY").toDate())) {
+            swal("", "Data Inicial não pode ser superior a Data de Hoje.", "warning");
+            return false;
+        }
+    }
 
       if (isNaN(final.getDate())) {
             $("#"+dt_final).val( hoje);
@@ -526,7 +633,7 @@ function validaDatasRelatorios(dt_inicial, dt_final, validaInicialFuturo = false
       }
 
 
-      if(inicial > final){
+      if( (inicial > final) && valiadDtInicial){
         swal("", "Data Inicial não pode ser superior a Data Final.", "warning");
         return false;
     }
@@ -546,18 +653,17 @@ function retornaTabela(dados) {
     for(i = 0; i < dados.cabecalho.length; i++){
         th += `<th class="center">${dados.cabecalho[i]}</th>`
     }
-
     table = head_table + th + middle_table
 
     htmlDados = ``
-    for(var i in dados.dados) {
+    for(let i in dados.dados) {
         if (typeof(dados['link_table']) !="undefined"){
 
             if(dados['link_table'].length < 2){
                 linha = `<tr style="text-align:center;font-size:11px;" onclick='${dados['link_table'][0]}(${JSON.stringify(dados['dados'][i])})'>`
             }else{
                 linha = `<tr onclick="${dados['link_table'][0]}(`
-                for(x = 1; x < dados['link_table'].length; x++){
+                for(let x = 1; x < dados['link_table'].length; x++){
                     linha +=  `'${dados['dados'][i][dados['link_table'][x]]}',`
                 }
                 linha = linha.substring(0,linha.length-1)+`)">`
@@ -568,7 +674,7 @@ function retornaTabela(dados) {
 
         htmlDados += linha
 
-        for (j = 0; j < dados.campos_data.length; j++) {
+        for (let j = 0; j < dados.campos_data.length; j++) {
             htmlDados += `<td style="text-align:center">${retiraNoneDaTable(dados.dados[i][dados.campos_data[j]])}</td>`
         }
         htmlDados += `</tr>`
@@ -576,8 +682,8 @@ function retornaTabela(dados) {
     $(`#${dados.div_table}`).html(table+htmlDados)
 
 
-    var orderby = [];
-    if (dados['order_table'] && dados.dados.length > 0) {
+    let orderby = [];
+    if ('order_table' in dados && dados.dados.length > 0) {
         for (var i = 0; i < dados['order_table'].length; i++) {
             orderby.push([Math.abs(dados.campos_data.indexOf(dados['order_table'][i][0])), dados['order_table'][i][1].toLowerCase()]);
         }
@@ -585,6 +691,15 @@ function retornaTabela(dados) {
         orderby.push([1, "asc"]);
     }
 
+    let find_registry = true;
+    if ('find_registry' in dados){
+        find_registry = dados['find_registry'];
+    }
+
+    let paginate = true;
+    if ('include_pages' in dados){
+        paginate = dados['include_pages'];
+    }
 
     if ($.fn.dataTable.isDataTable(`#dataTable${dados.id_table}`)) {
         table = $(`#dataTable${dados.id_table}`).DataTable();
@@ -592,33 +707,30 @@ function retornaTabela(dados) {
     else {
         // if(typeof(dados['ordem_colunas'] != "undefined")){
         table = $(`#dataTable${dados.id_table}`).DataTable({
-            paging: true,
+            paging: paginate,
+            bInfo : false,
+            bFilter: find_registry,
             language: {decimal: ","},
             order: orderby,
+            fixedHeader: true,
             drawCallback: function( settings ) {
-                if (dados['fn_init_table'] != undefined){
-                    dados['fn_init_table'].call();
+                if ('fn_init_table' in dados){
+                    dados['fn_init_table']();
                 }
-            }
+
+                if (settings._iDisplayLength > settings.fnRecordsDisplay()) {
+                    $(settings.nTableWrapper).find('.dataTables_paginate').hide();
+                }else{
+                    $(settings.nTableWrapper).find('.dataTables_paginate').show();
+                }
+            },
         });
-        // }else{
-        //     table = $(`#dataTable${dados.id_table}`).DataTable({
-        //     paging: true,
-        //     language: {decimal: ","},
-        //     drawCallback: function( settings ) {
-        //         if (dados['fn_init_table'] != undefined){
-        //            dados['fn_init_table'].call();
-        //         }
-        //     },"order": orderby
-        // });
-        // }
     }
 
     // $('#ordenaNomeCartao').trigger('click')
 }
 
 function reloadAfterSwal(tipo, mensagem, href = ''){
-
     swal({
         title: "",
         text: mensagem,
@@ -639,28 +751,42 @@ function reloadAfterSwal(tipo, mensagem, href = ''){
     });
 }
 
-function saveInputSessionStorage( divHtml=''){
+
+function get_data_of_inputs(){
     let inputValues = {};
 
-    if (divHtml != ''){
-        inputValues['idSavedHtml'] = divHtml;
-        inputValues['savedHtml'] = $("#"+divHtml)[0].outerHTML;
-     }
         $('input').each(function () {
-            /* NAO GRAVAR csrfmiddlewaretoken e csrftoken */
-            if (!($(this).attr('name').toUpperCase().includes('CSRF') && $(this).attr('name').toUpperCase().includes('TOKEN'))) {
                 inputValues[$(this).attr('name')] = $(this).val();
-            }
         });
 
         $('select').each(function () {
             inputValues[$(this).attr('name')] = $(this).val();
         });
 
+    delete inputValues.csrfmiddlewaretoken;
+    return inputValues;
+}
+
+
+
+function saveInputSessionStorage( divHtml=''){
+    let inputValues = get_data_of_inputs();
+
+    if (divHtml != ''){
+        inputValues['idSavedHtml'] = divHtml;
+        inputValues['savedHtml'] = $("#"+divHtml)[0].outerHTML;
+     }
     sessionStorage.setItem(window.location.href, JSON.stringify(inputValues));
 }
 
 function restoreInputLocalStorage(hrefClickButton=''){
+
+    for (let i = 0; i < sessionStorage.length; i++) {
+        if (sessionStorage.key(i) != window.location.href){
+            sessionStorage.removeItem(sessionStorage.key(i));
+        }
+    }
+
     if (sessionStorage.getItem(window.location.href)) {
        let restoredSession = JSON.parse(sessionStorage.getItem(window.location.href));
 
@@ -675,6 +801,15 @@ function restoreInputLocalStorage(hrefClickButton=''){
             $('#'+hrefClickButton).trigger('click');
         }
     }
+}
+
+function findInArray(array, value) {
+    for (let i=0; i < array.length; i++){
+        if (array[i] == value){
+            return true;
+        }
+    }
+    return false;
 }
 
 function erroProcessarDados(id_div = ''){
